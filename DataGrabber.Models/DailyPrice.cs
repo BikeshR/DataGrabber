@@ -15,4 +15,5 @@ namespace DataGrabber.Models
         public int Volume { get; set; }
         public Decimal DividendAmount { get; set; }
         public Decimal SplitCoefficient { get; set; }
+    }
 }
