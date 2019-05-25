@@ -14,5 +14,5 @@ namespace DataGrabber.Models
         public Decimal AdjClose { get; set; }
         public int Volume { get; set; }
         public Decimal DividendAmount { get; set; }
-        public Decimal SplitCoefficient { get; set;
+        public Decimal SplitCoefficient { get; set; }
 }
