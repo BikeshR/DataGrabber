@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataGrabber.Data.Migrations
 {
     [DbContext(typeof(DailyPriceContext))]
-    [Migration("20190525211123_Initial")]
+    [Migration("20190526165829_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -45,7 +45,9 @@ namespace DataGrabber.Data.Migrations
 
                     b.Property<decimal>("SplitCoefficient");
 
-                    b.Property<string>("Symbol");
+                    b.Property<string>("Symbol")
+                        .IsRequired()
+                        .HasMaxLength(4);
 
                     b.Property<int>("Volume");
 

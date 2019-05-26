@@ -14,7 +14,7 @@ namespace DataGrabber.Data.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    Symbol = table.Column<string>(nullable: true),
+                    Symbol = table.Column<string>(maxLength: 4, nullable: false),
                     PriceDate = table.Column<DateTime>(nullable: false),
                     LastUpdatedDate = table.Column<DateTime>(nullable: false),
                     Open = table.Column<decimal>(nullable: false),

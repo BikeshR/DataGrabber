@@ -43,7 +43,9 @@ namespace DataGrabber.Data.Migrations
 
                     b.Property<decimal>("SplitCoefficient");
 
-                    b.Property<string>("Symbol");
+                    b.Property<string>("Symbol")
+                        .IsRequired()
+                        .HasMaxLength(4);
 
                     b.Property<int>("Volume");
 
