@@ -5,6 +5,8 @@ namespace DataGrabber.Model
 {
     public class DailyPrice
     {
+        //Decimals and int are already required by default.
+        //EF Core by default creates decimal as (18,2). Manually changed to (19,4) in SQL Server.
         public int Id { get; set; }
         [Required]
         [StringLength(4)]

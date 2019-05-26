@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace DataGrabber
@@ -13,10 +14,14 @@ namespace DataGrabber
     {
         public static async Task Main()
         {
-            DailyPriceContext day = new DailyPriceContext();
-            ApiCall api = new ApiCall(day);
-            var jsonString = await api.GetJson();
-            await api.SaveToDatabase(jsonString);
+            while(true)
+            {
+                DailyPriceContext day = new DailyPriceContext();
+                ApiCall api = new ApiCall(day);
+                var jsonString = await api.GetJson();
+                await api.UpdateDatabase(jsonString);
+                Thread.Sleep(60000);
+            }
         }
     }
 }

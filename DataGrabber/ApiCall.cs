@@ -30,10 +30,10 @@ namespace DataGrabber
             return responseBody;
         }
 
-        public async Task SaveToDatabase(string jsonString)
+        //Takes the Json file and saves it to DailyPrices Table
+        public async Task UpdateDatabase(string jsonString)
         {
             JObject jsonObject = JObject.Parse(jsonString);
-
             List<DailyPrice> rows = new List<DailyPrice>();
 
             var jsonRows = jsonObject["Time Series (Daily)"].Children().ToList();
@@ -41,8 +41,10 @@ namespace DataGrabber
             {
                 JObject rowObject = JObject.Parse("{" + jsonRow.ToString() + "}");
 
+                //Price Date extracted from the Key to be reused later
                 var priceDate = rowObject.Properties().First().Name;
 
+                //Get DailyPrice object to be saved to a row
                 DailyPrice dailyPrice = new DailyPrice()
                 {
                     Symbol = jsonObject["Meta Data"]["2. Symbol"].ToString(),
@@ -57,8 +59,27 @@ namespace DataGrabber
                     DividendAmount = decimal.Parse(rowObject[priceDate]["7. dividend amount"].ToString()),
                     SplitCoefficient = decimal.Parse(rowObject[priceDate]["8. split coefficient"].ToString())
                 };
-                rows.Add(dailyPrice);
+
+                //If the row already exists, then update all data except Id
+                if(_context.DailyPrices.Any(x => x.Symbol == dailyPrice.Symbol && x.PriceDate == dailyPrice.PriceDate))
+                {
+                    var existingRow = _context.DailyPrices.Where(x => x.Symbol == dailyPrice.Symbol && x.PriceDate == dailyPrice.PriceDate).FirstOrDefault();
+                    existingRow.LastUpdatedDate = dailyPrice.LastUpdatedDate;
+                    existingRow.Open = dailyPrice.Open;
+                    existingRow.High = dailyPrice.High;
+                    existingRow.Low = dailyPrice.Low;
+                    existingRow.Close = dailyPrice.Close;
+                    existingRow.AdjClose = dailyPrice.AdjClose;
+                    existingRow.Volume = dailyPrice.Volume;
+                    existingRow.DividendAmount = dailyPrice.DividendAmount;
+                    existingRow.SplitCoefficient = dailyPrice.SplitCoefficient;
+                }
+                else
+                {
+                    rows.Add(dailyPrice);
+                }        
             }
+
             _context.DailyPrices.AddRange(rows);
             await _context.SaveChangesAsync();
         }
