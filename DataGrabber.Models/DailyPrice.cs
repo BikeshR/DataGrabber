@@ -1,19 +1,20 @@
 ﻿using System;
 
-namespace DataGrabber.Models
+namespace DataGrabber.Model
 {
     public class DailyPrice
     {
+        public int Id { get; set; }
         public string Symbol { get; set; }
         public DateTime PriceDate { get; set; }
         public DateTime LastUpdatedDate { get; set; }
-        public Decimal Open { get; set; }
-        public Decimal High { get; set; }
-        public Decimal Low { get; set; }
-        public Decimal Close { get; set; }
-        public Decimal AdjClose { get; set; }
+        public decimal Open { get; set; }
+        public decimal High { get; set; }
+        public decimal Low { get; set; }
+        public decimal Close { get; set; }
+        public decimal AdjClose { get; set; }
         public int Volume { get; set; }
-        public Decimal DividendAmount { get; set; }
-        public Decimal SplitCoefficient { get; set; }
+        public decimal DividendAmount { get; set; }
+        public decimal SplitCoefficient { get; set; }
     }
 }
