@@ -79,7 +79,6 @@ namespace DataGrabber
                     rows.Add(dailyPrice);
                 }        
             }
-
             _context.DailyPrices.AddRange(rows);
             await _context.SaveChangesAsync();
         }
