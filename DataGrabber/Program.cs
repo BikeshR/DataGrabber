@@ -15,8 +15,8 @@ namespace DataGrabber
         {
             DailyPriceContext day = new DailyPriceContext();
             ApiCall api = new ApiCall(day);
-            await api.GetJson();
-            await api.SaveSomething();
+            var jsonString = await api.GetJson();
+            await api.SaveToDatabase(jsonString);
         }
     }
 }

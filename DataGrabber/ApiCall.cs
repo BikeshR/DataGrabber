@@ -30,47 +30,37 @@ namespace DataGrabber
             return responseBody;
         }
 
-        public async Task SaveSomething()
+        public async Task SaveToDatabase(string jsonString)
         {
-            DailyPrice test = new DailyPrice()
+            JObject jsonObject = JObject.Parse(jsonString);
+
+            List<DailyPrice> rows = new List<DailyPrice>();
+
+            var jsonRows = jsonObject["Time Series (Daily)"].Children().ToList();
+            foreach (var jsonRow in jsonRows)
             {
-                Symbol = "ASD",
-                PriceDate = DateTime.Now,
-                LastUpdatedDate = DateTime.Now,
-                Open = 1.2345M,
-                High = 2.4354M,
-                Low = 3.4343M,
-                Close = 4.3234M,
-                AdjClose = 4.2123M,
-                Volume = 400,
-                DividendAmount = 3.4535M,
-                SplitCoefficient = 2.5345M
-            };
-            _context.DailyPrices.Add(test);
+                JObject rowObject = JObject.Parse("{" + jsonRow.ToString() + "}");
+
+                var priceDate = rowObject.Properties().First().Name;
+
+                DailyPrice dailyPrice = new DailyPrice()
+                {
+                    Symbol = jsonObject["Meta Data"]["2. Symbol"].ToString(),
+                    PriceDate = DateTime.Parse(priceDate),
+                    LastUpdatedDate = DateTime.Parse(jsonObject["Meta Data"]["3. Last Refreshed"].ToString()),
+                    Open = decimal.Parse(rowObject[priceDate]["1. open"].ToString()),
+                    High = decimal.Parse(rowObject[priceDate]["2. high"].ToString()),
+                    Low = decimal.Parse(rowObject[priceDate]["3. low"].ToString()),
+                    Close = decimal.Parse(rowObject[priceDate]["4. close"].ToString()),
+                    AdjClose = decimal.Parse(rowObject[priceDate]["5. adjusted close"].ToString()),
+                    Volume = int.Parse(rowObject[priceDate]["6. volume"].ToString()),
+                    DividendAmount = decimal.Parse(rowObject[priceDate]["7. dividend amount"].ToString()),
+                    SplitCoefficient = decimal.Parse(rowObject[priceDate]["8. split coefficient"].ToString())
+                };
+                rows.Add(dailyPrice);
+            }
+            _context.DailyPrices.AddRange(rows);
             await _context.SaveChangesAsync();
         }
-
-        
-
-
-
-        //public static List<DailyPrice> ConvertJson<DailyPrice>(string jsonString)
-        //{
-        //    JObject jsonObject = JObject.Parse(jsonString);
-
-        //    //List<DailyPrice> rows = new List<DailyPrice>();
-        //    //var dailyPrice = new DailyPrice()
-        //    //{
-        //    //    Symbol = "",
-
-        //    //};
-        //    //rows.Add(dailyPrice);
-
-        //    ////var rows = jsonObject["Time Series (Daily)"].Children().ToList();
-        //    //return rows;
-        //}
-
-
-
     }
 }
